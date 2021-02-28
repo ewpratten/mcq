@@ -8,8 +8,8 @@ use colored::*;
 #[tokio::main]
 async fn main() {
     // Handle CLI args
-    let matches = App::new("Reverse Beacon Network Client")
-        .version("0.1.2")
+    let matches = App::new("Minecraft Query")
+        .version("1.0.1")
         .author("Evan Pratten <ewpratten@gmail.com>")
         .arg(
             Arg::with_name("server")
@@ -22,7 +22,7 @@ async fn main() {
                 .short("p")
                 .long("port")
                 .takes_value(true)
-                .help("Server port (Default: 25565)")
+                .help("Server port")
                 .default_value("25565")
                 .required(false),
         )
