@@ -4,6 +4,7 @@ extern crate clap;
 use async_minecraft_ping::ConnectionConfig;
 use clap::{App, Arg};
 use colored::*;
+use mc_legacy_formatting::SpanExt;
 
 #[tokio::main]
 async fn main() {
@@ -44,7 +45,10 @@ async fn main() {
     // Print status
     println!("Minecraft {}", status.version.name.italic().bright_blue());
     if status.description.text.chars().count() > 0 {
-        println!("{}", status.description.text.italic());
+        for span in status.description.text.span_iter() {
+            print!("{}", span);
+        }
+        print!("\n");
     }
     println!(
         "{} / {} players online",
