@@ -1,26 +1,23 @@
-#[macro_use]
-extern crate clap;
-
-use async_minecraft_ping::ConnectionConfig;
-use clap::{App, Arg};
+use async_minecraft_ping::{ConnectionConfig, ServerDescription};
+use clap::{Arg, Command};
 use colored::*;
 use mc_legacy_formatting::SpanExt;
 
-#[tokio::main]
+#[tokio::main(flavor = "current_thread")]
 async fn main() {
     // Handle CLI args
-    let matches = App::new("Minecraft Query")
+    let matches = Command::new("Minecraft Query")
         .version("1.0.1")
         .author("Evan Pratten <ewpratten@gmail.com>")
         .arg(
-            Arg::with_name("server")
+            Arg::new("server")
                 .takes_value(true)
                 .help("Minecraft server address")
                 .required(true),
         )
         .arg(
-            Arg::with_name("port")
-                .short("p")
+            Arg::new("port")
+                .short('p')
                 .long("port")
                 .takes_value(true)
                 .help("Server port")
@@ -31,24 +28,29 @@ async fn main() {
 
     // Get args
     let server = matches.value_of("server").unwrap();
-    let port = value_t!(matches.value_of("port"), u16).unwrap_or(25565);
+    let port: u16 = matches.value_of_t("port").unwrap_or(25565);
 
     // Define a connection to the server
     let connection_config = ConnectionConfig::build(server.to_string()).with_port(port);
 
     // Connect to the server
-    let mut connection = connection_config.connect().await.unwrap();
+    let connection = connection_config.connect().await.unwrap();
 
     // Get status
-    let status = connection.status().await.unwrap();
+    let status = connection.status().await.unwrap().status;
 
     // Print status
     println!("Minecraft {}", status.version.name.italic().bright_blue());
-    if status.description.text.chars().count() > 0 {
-        for span in status.description.text.span_iter() {
+    let description = match status.description {
+        ServerDescription::Plain(str) => str,
+        ServerDescription::Object { text } => text,
+    };
+
+    if !description.is_empty() {
+        for span in description.span_iter() {
             print!("{}", span);
         }
-        print!("\n");
+        println!();
     }
     println!(
         "{} / {} players online",

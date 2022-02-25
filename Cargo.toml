@@ -2,7 +2,7 @@
 name = "mcquery"
 version = "1.0.1"
 authors = ["Evan Pratten <ewpratten@gmail.com>"]
-edition = "2018"
+edition = "2021"
 license-file = "LICENSE"
 readme = "README.md"
 repository = "https://github.com/ewpratten/mcq"
@@ -13,8 +13,8 @@ path = "src/main.rs"
 name = "mcq"
 
 [dependencies]
-clap = "2.33.3"
-async-minecraft-ping = "0.2.1"
+clap = "3.1"
+async-minecraft-ping = "0.8"
 colored = "2.0.0"
-tokio = { version = "0.2", features = ["macros"] }
+tokio = { version = "1.17", features = ["macros", "rt"] }
 mc-legacy-formatting = "0.3.1"
