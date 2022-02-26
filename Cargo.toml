@@ -1,6 +1,6 @@
 [package]
 name = "mcquery"
-version = "1.0.1"
+version = "1.1.0"
 authors = ["Evan Pratten <ewpratten@gmail.com>"]
 edition = "2021"
 license-file = "LICENSE"
